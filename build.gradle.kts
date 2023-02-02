@@ -13,6 +13,8 @@ repositories {
 }
 
 dependencies {
+    implementation("org.junit.jupiter:junit-jupiter:5.9.2")
+    implementation("org.junit.platform:junit-platform-runner:1.9.2")
     testImplementation(kotlin("test"))
 }
 
