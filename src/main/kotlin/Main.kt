@@ -37,16 +37,16 @@ class MetricsService {
     private val logEntriesPerMethodAndResource = mutableMapOf<String, MutableList<LogEntry>>()
 
     fun consumeLogEntry(logEntry: String) {
-        val entry = logEntry.split(" ")
-        val method = entry[1].substring(1)
-        val resource = entry[2]
+        val entryElement = logEntry.split(" ")
+        val method = entryElement[1].substring(1)
+        val resource = entryElement[2]
 
         val newEntry = LogEntry(
-            parseDateTime(entry[0].trim('[',']')),
+            parseDateTime(entryElement[0].trim('[', ']')),
             method,
             resource,
-            entry[4].toInt(),
-            entry[5].toInt().toDuration(DurationUnit.MILLISECONDS)
+            entryElement[4].toInt(),
+            entryElement[5].toInt().toDuration(DurationUnit.MILLISECONDS)
         )
 
         logEntriesPerMethodAndResource.getOrPut(method + resource) { mutableListOf() }.add(newEntry)
