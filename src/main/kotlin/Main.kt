@@ -5,6 +5,8 @@ import kotlin.time.Duration
 import java.io.File
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
+import kotlin.time.DurationUnit
+import kotlin.time.toDuration
 
 val TEST_DATA_FILE = "/home/coderpad/data/access.log"
 val DATETIME_FORMAT = DateTimeFormatter.ISO_DATE_TIME
@@ -44,7 +46,7 @@ class MetricsService {
             method,
             resource,
             entry[4].toInt(),
-            entry[5].toDuration(ChronoUnits.MILIS)
+            entry[5].toInt().toDuration(DurationUnit.MILLISECONDS)
         )
 
         logEntriesPerMethod.merge(method + resource, logEntry, List::add)
