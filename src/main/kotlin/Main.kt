@@ -34,7 +34,7 @@ data class LogEntry(
 
 class MetricsService {
 
-    val logEntriesPerMethodAndResource = mutableMapOf(String, List<LogEntries>)
+    private val logEntriesPerMethodAndResource = mutableMapOf<String, MutableList<LogEntry>>()
 
     fun consumeLogEntry(logEntry: String) {
         val entry = logEntry.split(" ")
