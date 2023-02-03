@@ -53,7 +53,7 @@ class MetricsService {
     }
 
     fun getAggregatedMetrics(method: String, resource: String, limit: Int): List<AggregatedMetrics> {
-        val now = LocalDateTime.now()
+        if (limit < 1) return emptyList()
 
         val firstReq =
         val totalReqs
