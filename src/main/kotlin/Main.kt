@@ -32,7 +32,7 @@ data class LogEntry(
 
 class MetricsService {
 
-    private val logEntriesPerMethodAndResource = mutableMapOf<String, MutableList<LogEntry>>()
+    private val logEntriesPerMethodAndResource = mutableMapOf<String, MutableMap<LocalDateTime, MutableList<LogEntry>>>()
 
     fun consumeLogEntry(logEntry: String) {
         val entryElement = logEntry.split(" ")
@@ -47,7 +47,9 @@ class MetricsService {
             entryElement[5].toInt()
         )
 
-        logEntriesPerMethodAndResource.getOrPut(method + resource) { mutableListOf() }.add(newEntry)
+        logEntriesPerMethodAndResource.getOrPut(method + resource) { mutableMapOf() }
+            .getOrPut(newEntry.timestamp.truncatedTo(ChronoUnit.MINUTES)) { mutableListOf() }
+                .add(newEntry)
     }
 
     fun getAggregatedMetrics(method: String, resource: String, limit: Int): List<AggregatedMetrics> {
