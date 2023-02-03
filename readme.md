@@ -3,7 +3,7 @@ We want you to build the business logic of a service that consumes a web server 
 This service:
 
 1. processes new entries as they appear in the access log. The access log contains lines with the following format (already filtered to contain only successful GET requests):
-> [\<TIMESTAMP\>] "<METHOD> <RESOURCE> HTTP/1.1" 200 <DURATION_IN_MS>
+>`[<TIMESTAMP>] "<METHOD> <RESOURCE> HTTP/1.1" 200 <DURATION_IN_MS>`
 
 2. exposes aggregated metrics data per method+resource for each minute containing the following information:
    * first request timestamp
