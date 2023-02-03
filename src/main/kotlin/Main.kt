@@ -1,6 +1,7 @@
-import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Test
+import org.junit.Assert.assertEquals
+import org.junit.Test
 import org.junit.runner.JUnitCore
+import kotlin.time.Duration
 import java.io.File
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
@@ -21,14 +22,47 @@ data class AggregatedMetrics(
     val minimumTimeToServeInMs: Int?
 )
 
+data class LogEntry(
+    val timestamp: LocalDateTime,
+    val method: String,
+    val resource: String,
+    val responseStatusCode: Int,
+    val duration: Duration
+)
+
 class MetricsService {
 
+    val logEntriesPerMethodAndResource = mutableMapOf(String, List<LogEntries>)
+
     fun consumeLogEntry(logEntry: String) {
-        TODO()
+        val entry = logEntry.split(" ")
+        val method = entry[1].substring(1)
+        val resource = entry[2]
+
+        val logEntry = LogEntry(
+            parseDateTime(entry[0].trim(listOf("[","]"))),
+            method,
+            resource,
+            entry[4].toInt(),
+            entry[5].toDuration(ChronoUnits.MILIS)
+        )
+
+        logEntriesPerMethod.merge(method + resource, logEntry, List::add)
     }
 
     fun getAggregatedMetrics(method: String, resource: String, limit: Int): List<AggregatedMetrics> {
-        TODO()
+        val now = LocalDateTime.now()
+
+        val firstReq =
+        val totalReqs
+        for (entry in logEntriesPerMethod[method + resource]) {
+            if (entry.timestamp.minus(now) > limit) continue
+
+            if entry.timestamp < firstReq
+
+            totalReqs++
+        }
+
     }
 }
 
