@@ -8,7 +8,7 @@ import java.time.format.DateTimeFormatter
 import kotlin.time.DurationUnit
 import kotlin.time.toDuration
 
-val TEST_DATA_FILE = "/home/coderpad/data/access.log"
+val TEST_DATA_FILE = {}::class.java.getResource("access.log")?.toURI()
 val DATETIME_FORMAT = DateTimeFormatter.ISO_DATE_TIME
 
 fun readTestData() = File(TEST_DATA_FILE).readLines().asSequence()
