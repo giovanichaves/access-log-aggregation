@@ -1,12 +1,10 @@
 import org.junit.Assert.assertEquals
 import org.junit.Test
 import org.junit.runner.JUnitCore
-import kotlin.time.Duration
 import java.io.File
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
-import kotlin.time.DurationUnit
-import kotlin.time.toDuration
+import java.time.temporal.ChronoUnit
 
 val TEST_DATA_FILE = {}::class.java.getResource("access.log")?.toURI()
 val DATETIME_FORMAT = DateTimeFormatter.ISO_DATE_TIME
@@ -29,7 +27,7 @@ data class LogEntry(
     val method: String,
     val resource: String,
     val statusCode: Int,
-    val duration: Duration
+    val duration: Int
 )
 
 class MetricsService {
@@ -46,7 +44,7 @@ class MetricsService {
             method,
             resource,
             entryElement[4].toInt(),
-            entryElement[5].toInt().toDuration(DurationUnit.MILLISECONDS)
+            entryElement[5].toInt()
         )
 
         logEntriesPerMethodAndResource.getOrPut(method + resource) { mutableListOf() }.add(newEntry)
