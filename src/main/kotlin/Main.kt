@@ -41,15 +41,15 @@ class MetricsService {
         val method = entry[1].substring(1)
         val resource = entry[2]
 
-        val logEntry = LogEntry(
-            parseDateTime(entry[0].trim(listOf("[","]"))),
+        val newEntry = LogEntry(
+            parseDateTime(entry[0].trim('[',']')),
             method,
             resource,
             entry[4].toInt(),
             entry[5].toInt().toDuration(DurationUnit.MILLISECONDS)
         )
 
-        logEntriesPerMethod.merge(method + resource, logEntry, List::add)
+        logEntriesPerMethodAndResource.getOrPut(method + resource) { mutableListOf() }.add(newEntry)
     }
 
     fun getAggregatedMetrics(method: String, resource: String, limit: Int): List<AggregatedMetrics> {
