@@ -28,7 +28,7 @@ data class LogEntry(
     val timestamp: LocalDateTime,
     val method: String,
     val resource: String,
-    val responseStatusCode: Int,
+    val statusCode: Int,
     val duration: Duration
 )
 
