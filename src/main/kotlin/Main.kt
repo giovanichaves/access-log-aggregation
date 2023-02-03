@@ -55,16 +55,40 @@ class MetricsService {
     fun getAggregatedMetrics(method: String, resource: String, limit: Int): List<AggregatedMetrics> {
         if (limit < 1) return emptyList()
 
-        val firstReq =
-        val totalReqs
-        for (entry in logEntriesPerMethod[method + resource]) {
-            if (entry.timestamp.minus(now) > limit) continue
+        val methodResourceEntries = logEntriesPerMethodAndResource[method + resource] ?: return emptyList()
 
-            if entry.timestamp < firstReq
+        val lastXMinutesEntries = methodResourceEntries.lastXMinutes(limit)
 
-            totalReqs++
+        return lastXMinutesEntries.entries.map { it.value.aggregateEntries(it.key) }
+    }
+
+    private fun Map<LocalDateTime, MutableList<LogEntry>>.lastXMinutes(limit: Int) = this.toSortedMap(compareByDescending { it }).asSequence().take(limit).map { it.toPair() }.toMap()
+
+    private fun List<LogEntry>.aggregateEntries(minute: LocalDateTime): AggregatedMetrics {
+        if (this.isEmpty()) return AggregatedMetrics(minute, null, null, 0, null, null, null)
+
+        var firstReq: LocalDateTime = this.first().timestamp
+        var lastReq: LocalDateTime = this.first().timestamp
+        var totalDuration = 0
+        var minimumTimeToServeInMs = Int.MAX_VALUE
+        var maximumTimeToServeInMs = 0
+        for (entry in this) {
+            if (entry.timestamp.isBefore(firstReq)) firstReq = entry.timestamp
+            if (entry.timestamp.isAfter(lastReq)) lastReq = entry.timestamp
+            totalDuration += entry.duration
+            if (entry.duration < (minimumTimeToServeInMs)) minimumTimeToServeInMs = entry.duration
+            if (entry.duration > (maximumTimeToServeInMs)) maximumTimeToServeInMs = entry.duration
         }
 
+        return AggregatedMetrics(
+            minute,
+            firstReq,
+            lastReq,
+            this.size,
+            totalDuration / this.size,
+            minimumTimeToServeInMs,
+            maximumTimeToServeInMs
+        )
     }
 }
 
