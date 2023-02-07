@@ -76,8 +76,8 @@ class MetricsService {
             if (entry.timestamp.isBefore(firstReq)) firstReq = entry.timestamp
             if (entry.timestamp.isAfter(lastReq)) lastReq = entry.timestamp
             totalDuration += entry.duration
-            if (entry.duration < (minimumTimeToServeInMs)) minimumTimeToServeInMs = entry.duration
-            if (entry.duration > (maximumTimeToServeInMs)) maximumTimeToServeInMs = entry.duration
+            if (entry.duration < minimumTimeToServeInMs) minimumTimeToServeInMs = entry.duration
+            if (entry.duration > maximumTimeToServeInMs) maximumTimeToServeInMs = entry.duration
         }
 
         return AggregatedMetrics(
